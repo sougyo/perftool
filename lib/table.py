@@ -13,7 +13,7 @@ class Table:
     self.subkey_column = options.get("subkey_column")
     self.column_head   = options.get("column_head")
     self.column_tail   = options.get("column_tail")
-    self.exact         = options["exact"] if options.has_key("exact") else True
+    self.exact         = options.get("exact", True)
     self.columns       = None
     self.time_list     = collections.OrderedDict()
     self.gen           = self.generator()
@@ -23,7 +23,7 @@ class Table:
     return self
 
   def __next__(self):
-    return self.next()
+    return self.gen.__next__()
 
   def next(self):
     return self.gen.next()
@@ -74,7 +74,7 @@ class Table:
         record = re.split(r"\s+", line) if self.exact else re.split(r"\s+", line, columns_len - 1)
 
         if len(record) == columns_len:
-          cr = zip(self.columns, record)
+          cr = list(zip(self.columns, record))
           s  = dict(cr).get(self.subkey_column)
           for (c, v) in cr:
             if c != self.subkey_column:
