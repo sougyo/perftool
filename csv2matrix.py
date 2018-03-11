@@ -20,8 +20,9 @@ for (time, k1, k2, val) in csv.reader(sys.stdin):
   internal_time = (cnt, time)
 
   key = "{}-{}".format(k1, k2)
-  if not d.has_key(internal_time):
+  if not (internal_time in d):
     d[internal_time] = {}
+
   d[internal_time][key] = val
 
   time_list[internal_time] = True
@@ -29,9 +30,8 @@ for (time, k1, k2, val) in csv.reader(sys.stdin):
 
   prev_time = time
 
-
 writer = csv.writer(sys.stdout)
-writer.writerow(["time"] + key_list.keys())
+writer.writerow(["time"] + list(key_list.keys()))
 for internal_time in time_list:
   (cnt, time) = internal_time
   writer.writerow([time] + [d[internal_time].get(key) for key in key_list])

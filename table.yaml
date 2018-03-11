@@ -1,0 +1,37 @@
+- name: sar-u
+  column_pattern: idle
+  subkey_column: CPU
+- name: mpstat
+  column_pattern: idle
+  subkey_column: CPU
+- name: iostat
+  column_pattern: rrqm
+  subkey_column: "Device:"
+  time_regexp: \d\d/\d\d/\d\d (\d\d:\d\d:\d\d)
+- name: top
+  column_pattern: COMMAND
+  time_regexp: top \- (\d\d:\d\d:\d\d)
+  exact: False
+  subkey_column: PID
+- name: interrupts
+  column_pattern: CPU
+  exact: False
+  subkey_column: HEAD
+  time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)
+  column_head: HEAD
+  column_tail: TAIL
+- name: numastat
+  column_pattern: node0
+  subkey_column: HEAD
+  time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)
+  column_head: HEAD
+- name: ps
+  column_pattern: PID
+  exact: False
+  subkey_column: PID
+  time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)
+- name: slabinfo
+  column_pattern: name
+  subkey_column: name
+  exact: False
+  time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)

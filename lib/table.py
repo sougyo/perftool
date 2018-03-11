@@ -5,9 +5,9 @@ import collections
 import re
 
 class Table:
-  def __init__(self, fd, column_pattern, **options):
+  def __init__(self, fd, **options):
     self.fd            = fd
-    self.column_regexp = re.compile(column_pattern)
+    self.column_regexp = re.compile(options["column_pattern"])
     tr                 = options.get("time_regexp")
     self.time_regexp   = tr and re.compile(tr)
     self.subkey_column = options.get("subkey_column")
