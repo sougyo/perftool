@@ -8,8 +8,8 @@ import argparse
 import yaml
 import os
 
-table_yaml = yaml.load(open("table.yaml", "r+"))
-hint_yaml  = yaml.load(open("hint.yaml" , "r+"))
+table_yaml = yaml.load(open(os.path.join(os.path.dirname(__file__), "table.yaml"), "r+"))
+hint_yaml  = yaml.load(open(os.path.join(os.path.dirname(__file__), "hint.yaml") , "r+"))
 
 names = ', '.join([k for k in table_yaml])
 

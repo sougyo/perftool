@@ -19,7 +19,10 @@ for (time, k1, k2, val) in csv.reader(sys.stdin):
 
   internal_time = (cnt, time)
 
-  key = "{}-{}".format(k1, k2)
+  key = str(k1)
+  if k2:
+   key += "." + str(k2)
+
   if not (internal_time in d):
     d[internal_time] = {}
 

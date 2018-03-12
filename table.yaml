@@ -30,7 +30,7 @@ sar-nICMP:
 sar-nEICMP:
   column_pattern: ierr
 sar-nTCP:
-  column_pattern: active
+  column_pattern: passive
 sar-nETCP:
   column_pattern: atmptf
 sar-nUDP:
