@@ -43,4 +43,10 @@
 - pattern: mpstat
   list:
     - sar-u
+- pattern: pidstat
+  list:
+    - pidstat-d
+- pattern: slabinfo
+  list:
+    - slabinfo
 

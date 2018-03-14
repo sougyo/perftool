@@ -18,6 +18,8 @@ class Table:
     self.time_list     = collections.OrderedDict()
     self.gen           = self.generator()
     self.head_time_regexp = re.compile(r"^(\d\d)(:|時)(\d\d)(:|分)(\d\d)(秒)?\s+(.*)$")
+    self.replace_old = options.get("replace_old")
+    self.replace_new  = options.get("replace_new")
 
   def __iter__(self):
     return self
@@ -40,6 +42,9 @@ class Table:
         raise StopIteration
 
       line = line.strip()
+
+      if self.replace_old and self.replace_new:
+        line = line.replace(self.replace_old, self.replace_new)
 
       if self.time_regexp:
         m = self.time_regexp.search(line)

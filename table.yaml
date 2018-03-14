@@ -81,8 +81,14 @@ ps:
   subkey_column: PID
   exact: False
   time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)
-#slabinfo:
-#  column_pattern: name
-#  subkey_column: name
-#  exact: False
-#  time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)
+pidstat-d:
+  column_pattern: kB
+  subkey_column: PID
+  exact: False
+slabinfo:
+  column_pattern: name
+  subkey_column: name
+  exact: False
+  time_regexp: ^Time:\s+(\d\d:\d\d:\d\d)
+  replace_old: "# name"
+  replace_new: "name"
