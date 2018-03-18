@@ -3,6 +3,12 @@
 import collections
 import csv
 import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--prefix' , type=str, help='prefix_key')
+parser.add_argument('--postfix', type=str, help='postfix_key')
+args = parser.parse_args()
 
 d = {}
 key_list  = collections.OrderedDict()
@@ -13,9 +19,6 @@ cnt = 0
 for (time, k1, k2, val) in csv.reader(sys.stdin):
   if time != prev_time:
     cnt += 1
-
-  if not val:
-    continue
 
   internal_time = (cnt, time)
 
@@ -33,8 +36,14 @@ for (time, k1, k2, val) in csv.reader(sys.stdin):
 
   prev_time = time
 
+column_names = key_list.keys()
+if args.prefix:
+  column_names = [("%s%s" % (args.prefix, k))  for k in column_names]
+if args.postfix:
+  column_names = [("%s%s" % (k, args.postfix)) for k in column_names]
+
 writer = csv.writer(sys.stdout)
-writer.writerow(["time"] + list(key_list.keys()))
+writer.writerow(["time"] + list(column_names))
 for internal_time in time_list:
   (cnt, time) = internal_time
   writer.writerow([time] + [d[internal_time].get(key) for key in key_list])
