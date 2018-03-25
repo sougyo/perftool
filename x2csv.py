@@ -26,14 +26,18 @@ basename = os.path.basename(args.filepath) if args.filepath else 'sar'
 for l in map(lambda h: h["list"], filter(lambda x: re.search(x["pattern"], basename), hint_yaml)):
   key_list.extend(l)
 
+f = open(args.filepath) if args.filepath else sys.stdin
 writer = csv.writer(sys.stdout)
 out = False
-for k in key_list:
-  f = open(args.filepath) if args.filepath else sys.stdin
-  for a in lib.table.Table(f, **table_yaml[k]):
-    writer.writerow(a)
-    sys.stdout.flush()
-    out = True
-  if out:
-    break
-
+try:
+  for k in key_list:
+    if args.filepath:
+      f.seek(0)
+    for a in lib.table.Table(f, **table_yaml[k]):
+      writer.writerow(a)
+      sys.stdout.flush()
+      out = True
+    if out:
+      break
+finally:
+  f.close()
