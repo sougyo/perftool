@@ -2,8 +2,6 @@
 
 import sys
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import argparse
 
 parser = argparse.ArgumentParser(description='performance info filter')
