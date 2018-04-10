@@ -9,7 +9,9 @@ parser.add_argument('--regex'       , default=None, type=str, help='column filte
 parser.add_argument('--start_index' , default=None, type=int, help='start index')
 parser.add_argument('--end_index'   , default=None, type=int, help='end index')
 parser.add_argument('--max'         , action='store_true', help='max')
+parser.add_argument('--min'         , action='store_true', help='min')
 parser.add_argument('--mean'        , action='store_true', help='mean')
+parser.add_argument('--sum'         , action='store_true', help='sum')
 parser.add_argument('--transpose'   , action='store_true', help='transpose')
 parser.add_argument('filepaths'     , nargs='*')
 args = parser.parse_args()
@@ -32,8 +34,12 @@ if args.transpose:
   df = df.transpose()
 
 if args.max:
-  print(df.max().to_csv())
+  print(df.max().to_frame().to_csv())
+elif args.min:
+  print(df.min().to_frame().to_csv())
 elif args.mean:
-  print(df.mean().to_csv())
+  print(df.mean().to_frame().to_csv())
+elif args.sum:
+  print(df.sum().to_frame().to_csv())
 else:
   print(df.to_csv())
