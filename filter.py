@@ -13,6 +13,7 @@ parser.add_argument('--min'         , action='store_true', help='min')
 parser.add_argument('--mean'        , action='store_true', help='mean')
 parser.add_argument('--sum'         , action='store_true', help='sum')
 parser.add_argument('--transpose'   , action='store_true', help='transpose')
+parser.add_argument('--normalize'   , action='store_true', help='normalize')
 parser.add_argument('filepaths'     , nargs='*')
 args = parser.parse_args()
 
@@ -29,6 +30,19 @@ if args.start_index:
   dfs = [df[args.start_index:] for df in dfs]
 
 df = pd.concat(dfs, axis=1)
+
+def f(s):
+  d = s.max() - s.min()
+  if d == 0:
+    if s.max() == 0:
+      return s
+    elif d == 0:
+      return s / s.max()
+  else:
+    return (s - s.min())/d
+
+if args.normalize:
+  df = df.apply(f, axis=0)
 
 if args.transpose:
   df = df.transpose()
