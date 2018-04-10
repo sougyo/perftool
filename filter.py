@@ -10,6 +10,7 @@ parser.add_argument('--start_index' , default=None, type=int, help='start index'
 parser.add_argument('--end_index'   , default=None, type=int, help='end index')
 parser.add_argument('--max'         , action='store_true', help='max')
 parser.add_argument('--mean'        , action='store_true', help='mean')
+parser.add_argument('--transpose'   , action='store_true', help='transpose')
 parser.add_argument('filepaths'     , nargs='*')
 args = parser.parse_args()
 
@@ -26,6 +27,9 @@ if args.start_index:
   dfs = [df[args.start_index:] for df in dfs]
 
 df = pd.concat(dfs, axis=1)
+
+if args.transpose:
+  df = df.transpose()
 
 if args.max:
   print(df.max().to_csv())
