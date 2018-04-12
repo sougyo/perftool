@@ -5,47 +5,77 @@ import pandas as pd
 import argparse
 
 parser = argparse.ArgumentParser(description='performance info filter')
-parser.add_argument('--regex'       , default=None, type=str, help='column filter regexp')
-parser.add_argument('--start_index' , default=None, type=int, help='start index')
-parser.add_argument('--end_index'   , default=None, type=int, help='end index')
-parser.add_argument('--max'         , action='store_true', help='max')
-parser.add_argument('--min'         , action='store_true', help='min')
-parser.add_argument('--mean'        , action='store_true', help='mean')
-parser.add_argument('--sum'         , action='store_true', help='sum')
-parser.add_argument('--transpose'   , action='store_true', help='transpose')
-parser.add_argument('--normalize'   , action='store_true', help='normalize')
-parser.add_argument('filepaths'     , nargs='*')
+parser.add_argument('--regex'        , type=str, help='column filter regexp')
+parser.add_argument('--start_index'  , type=int, help='start index')
+parser.add_argument('--end_index'    , type=int, help='end index')
+parser.add_argument('--start_time'   , type=str, help='start time')
+parser.add_argument('--end_time'     , type=str, help='end time')
+parser.add_argument('--index_name'   , type=str, help='index name')
+parser.add_argument('--column_prefix', type=str, help='column prefix')
+parser.add_argument('--max'          , action='store_true', help='max')
+parser.add_argument('--min'          , action='store_true', help='min')
+parser.add_argument('--mean'         , action='store_true', help='mean')
+parser.add_argument('--median'       , action='store_true', help='median')
+parser.add_argument('--sum'          , action='store_true', help='sum')
+parser.add_argument('--transpose'    , action='store_true', help='transpose')
+parser.add_argument('--normalize'    , action='store_true', help='normalize')
+parser.add_argument('--standardize'  , action='store_true', help='standardize')
+parser.add_argument('--columns'      , action='store_true', help='columns')
+parser.add_argument('--describe'     , action='store_true', help='describe')
+parser.add_argument('--label_with_index', action='store_true', help='label with index')
+parser.add_argument('filepaths'      , nargs='*')
 args = parser.parse_args()
 
 filepaths = args.filepaths or [sys.stdin]
 
-dfs = [pd.read_csv(f, index_col='time') for f in filepaths]
+dfs = [pd.read_csv(f, index_col=(args.index_name or 'time')) for f in filepaths]
 if args.regex:
   dfs = [df.filter(regex=args.regex) for df in dfs]
 
-if args.end_index:
+if args.end_index != None:
   dfs = [df[:(args.end_index + 1)] for df in dfs]
 
-if args.start_index:
+if args.start_index != None:
   dfs = [df[args.start_index:] for df in dfs]
 
+if args.column_prefix:
+  df.columns = map(lambda x: args.column_prefix + x, df.columns)
+
+if args.label_with_index:
+  for i, df in enumerate(dfs):
+    df.columns = map(lambda x: str(i) + "_" + x,df.columns)
+
 df = pd.concat(dfs, axis=1)
+cond = [True] * len(df.index)
 
-def f(s):
-  d = s.max() - s.min()
-  if d == 0:
-    if s.max() == 0:
-      return s
-    elif d == 0:
-      return s / s.max()
-  else:
-    return (s - s.min())/d
+def to_datetime(s):
+  return pd.to_datetime(s, format='%H:%M:%S')
 
-if args.normalize:
-  df = df.apply(f, axis=0)
+if args.start_time:
+  cond &= (to_datetime(args.start_time) <= to_datetime(df.index))
+
+if args.end_time:
+  cond &= (to_datetime(args.end_time)   >= to_datetime(df.index))
+
+df = df[cond]
 
 if args.transpose:
   df = df.transpose()
+
+if args.columns:
+  for c in df.columns:
+    print(c)
+  sys.exit(0)
+
+if args.describe:
+  print(df.describe().to_csv())
+  sys.exit(0)
+
+if args.normalize:
+  df = df.apply(lambda x: (x - x.min()) / (x.max() - x.min()), axis=0)
+
+if args.standardize:
+  df = df.apply(lambda x: (x - x.mean())/x.std(), axis=0)
 
 if args.max:
   print(df.max().to_frame().to_csv())
@@ -53,6 +83,8 @@ elif args.min:
   print(df.min().to_frame().to_csv())
 elif args.mean:
   print(df.mean().to_frame().to_csv())
+elif args.median:
+  print(df.median().to_frame().to_csv())
 elif args.sum:
   print(df.sum().to_frame().to_csv())
 else:
