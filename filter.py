@@ -12,6 +12,7 @@ parser.add_argument('--start_time'   , type=str, help='start time')
 parser.add_argument('--end_time'     , type=str, help='end time')
 parser.add_argument('--index_name'   , type=str, help='index name')
 parser.add_argument('--column_prefix', type=str, help='column prefix')
+parser.add_argument('--resample'     , type=str, help='resample (e.g. 5S)')
 parser.add_argument('--max'          , action='store_true', help='max')
 parser.add_argument('--min'          , action='store_true', help='min')
 parser.add_argument('--mean'         , action='store_true', help='mean')
@@ -22,7 +23,7 @@ parser.add_argument('--normalize'    , action='store_true', help='normalize')
 parser.add_argument('--standardize'  , action='store_true', help='standardize')
 parser.add_argument('--columns'      , action='store_true', help='columns')
 parser.add_argument('--describe'     , action='store_true', help='describe')
-parser.add_argument('--label_with_index', action='store_true', help='label with index')
+parser.add_argument('-i', '--label_with_index', action='store_true', help='label with index')
 parser.add_argument('filepaths'      , nargs='*')
 args = parser.parse_args()
 
@@ -46,6 +47,8 @@ if args.label_with_index:
     df.columns = map(lambda x: str(i) + "_" + x,df.columns)
 
 df = pd.concat(dfs, axis=1)
+df.index.name = args.index_name or 'time'
+
 cond = [True] * len(df.index)
 
 def to_datetime(s):
@@ -58,6 +61,12 @@ if args.end_time:
   cond &= (to_datetime(args.end_time)   >= to_datetime(df.index))
 
 df = df[cond]
+
+if args.resample:
+  df.index = pd.to_datetime(df.index, format='%H:%M:%S')
+  df = df.resample(args.resample, label='right', closed='right').mean()
+  df.index = df.index.strftime('%H:%M:%S')
+  df.index.name = args.index_name or 'time'
 
 if args.transpose:
   df = df.transpose()
