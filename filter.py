@@ -8,11 +8,14 @@ parser = argparse.ArgumentParser(description='performance info filter')
 parser.add_argument('--regex'        , type=str, help='column filter regexp')
 parser.add_argument('--start_index'  , type=int, help='start index')
 parser.add_argument('--end_index'    , type=int, help='end index')
+parser.add_argument('--avg_top_n'    , type=int, help='show only top n result by average')
+parser.add_argument('--max_top_n'    , type=int, help='show only top n result by max')
 parser.add_argument('--start_time'   , type=str, help='start time')
 parser.add_argument('--end_time'     , type=str, help='end time')
 parser.add_argument('--index_name'   , type=str, help='index name')
 parser.add_argument('--column_prefix', type=str, help='column prefix')
 parser.add_argument('--resample'     , type=str, help='resample (e.g. 5S)')
+parser.add_argument('--csv_float_format' , type=str, help='csv float format (e.g. %.1f)')
 parser.add_argument('--max'          , action='store_true', help='max')
 parser.add_argument('--min'          , action='store_true', help='min')
 parser.add_argument('--mean'         , action='store_true', help='mean')
@@ -27,16 +30,18 @@ parser.add_argument('-i', '--label_with_index', action='store_true', help='label
 parser.add_argument('filepaths'      , nargs='*')
 args = parser.parse_args()
 
+csv_opt = { 'float_format': args.csv_float_format or '%.1f' }
+
 filepaths = args.filepaths or [sys.stdin]
 
 dfs = [pd.read_csv(f, index_col=(args.index_name or 'time')) for f in filepaths]
 if args.regex:
   dfs = [df.filter(regex=args.regex) for df in dfs]
 
-if args.end_index != None:
+if args.end_index is not None:
   dfs = [df[:(args.end_index + 1)] for df in dfs]
 
-if args.start_index != None:
+if args.start_index is not None:
   dfs = [df[args.start_index:] for df in dfs]
 
 if args.column_prefix:
@@ -68,6 +73,11 @@ if args.resample:
   df.index = df.index.strftime('%H:%M:%S')
   df.index.name = args.index_name or 'time'
 
+if args.avg_top_n is not None:
+  df = df[df.mean().sort_values(ascending=False)[:args.avg_top_n].index]
+elif args.max_top_n is not None:
+  df = df[df.max().sort_values(ascending=False)[:args.max_top_n].index]
+
 if args.transpose:
   df = df.transpose()
 
@@ -77,7 +87,7 @@ if args.columns:
   sys.exit(0)
 
 if args.describe:
-  print(df.describe().to_csv())
+  print(df.describe().to_csv(**csv_opt))
   sys.exit(0)
 
 if args.normalize:
@@ -87,14 +97,14 @@ if args.standardize:
   df = df.apply(lambda x: (x - x.mean())/x.std(), axis=0)
 
 if args.max:
-  print(df.max().to_frame().to_csv())
+  print(df.max().to_frame().to_csv(**csv_opt))
 elif args.min:
-  print(df.min().to_frame().to_csv())
+  print(df.min().to_frame().to_csv(**csv_opt))
 elif args.mean:
-  print(df.mean().to_frame().to_csv())
+  print(df.mean().to_frame().to_csv(**csv_opt))
 elif args.median:
-  print(df.median().to_frame().to_csv())
+  print(df.median().to_frame().to_csv(**csv_opt))
 elif args.sum:
-  print(df.sum().to_frame().to_csv())
+  print(df.sum().to_frame().to_csv(**csv_opt))
 else:
-  print(df.to_csv())
+  print(df.to_csv(**csv_opt))
