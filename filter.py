@@ -10,6 +10,7 @@ parser.add_argument('--start_index'     , type=int, help='start index')
 parser.add_argument('--end_index'       , type=int, help='end index')
 parser.add_argument('--avg_top_n'       , type=int, help='show only top n result by average')
 parser.add_argument('--max_top_n'       , type=int, help='show only top n result by max')
+parser.add_argument('--fillna'          , type=float, help='fill N/A with value')
 parser.add_argument('--start_time'      , type=str, help='start time')
 parser.add_argument('--end_time'        , type=str, help='end time')
 parser.add_argument('-i', '--index_name', type=str, help='index name')
@@ -27,6 +28,7 @@ parser.add_argument('--standardize'     , action='store_true', help='standardize
 parser.add_argument('--columns'         , action='store_true', help='columns')
 parser.add_argument('--describe'        , action='store_true', help='describe')
 parser.add_argument('--label_with_index', action='store_true', help='label with index')
+parser.add_argument('--dropna'          , action='store_true', help='drop N/A columns')
 parser.add_argument('filepaths'         , nargs='*')
 args = parser.parse_args()
 
@@ -95,6 +97,12 @@ if args.normalize:
 
 if args.standardize:
   df = df.apply(lambda x: (x - x.mean())/x.std(), axis=0)
+
+if args.fillna is not None:
+  df = df.fillna(args.fillna)
+
+if args.dropna:
+  df = df.dropna(axis=1)
 
 if args.max:
   print(df.max().to_frame().to_csv(**csv_opt))
