@@ -29,14 +29,32 @@ parser.add_argument('--columns'         , action='store_true', help='columns')
 parser.add_argument('--describe'        , action='store_true', help='describe')
 parser.add_argument('--label_with_index', action='store_true', help='label with index')
 parser.add_argument('--dropna'          , action='store_true', help='drop N/A columns')
-parser.add_argument('filepaths'         , nargs='*')
+parser.add_argument('filepaths'         , nargs='*', help='prefix_tag:filepath:postfix_tag ...')
 args = parser.parse_args()
 
 csv_opt = { 'float_format': args.csv_float_format or '%.1f' }
 
 filepaths = args.filepaths or [sys.stdin]
 
-dfs = [pd.read_csv(f, index_col=(args.index_name or 'time')) for f in filepaths]
+def make_df(tagged_path, index_col):
+  prefix_tag = ""
+  postfix_tag = ""
+
+  c = tagged_path.count(":")
+  if c > 1:
+    prefix_tag, path, postfix_tag = tagged_path.split(":", 2)
+  elif c == 1:
+    prefix_tag, path = tagged_path.split(":", 1)
+  else:
+    path = tagged_path
+
+  df = pd.read_csv(path, index_col=index_col)
+  if prefix_tag or postfix_tag:
+    df.columns = [prefix_tag + column + postfix_tag for column in df.columns]
+
+  return df
+
+dfs = [make_df(f, args.index_name or 'time') for f in filepaths]
 if args.regex:
   dfs = [df.filter(regex=args.regex) for df in dfs]
 
