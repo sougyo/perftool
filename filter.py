@@ -40,7 +40,7 @@ def make_df(tagged_path, index_col):
   prefix_tag = ""
   postfix_tag = ""
 
-  c = tagged_path.count(":")
+  c = tagged_path.count(":") if isinstance(tagged_path, str) else 0
   if c > 1:
     prefix_tag, path, postfix_tag = tagged_path.split(":", 2)
   elif c == 1:
