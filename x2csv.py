@@ -1,30 +1,34 @@
 #!/usr/bin/env python
 
-import sys
+import argparse
+import json
 import csv
 import re
-import lib.table
-import lib.table_dict
-import lib.hint_dict
-import argparse
 import os
-
-table_dict = lib.table_dict.get()
-hint_dict  = lib.hint_dict.get()
-
-names = ', '.join([k for k in table_dict])
+import sys
+import lib.table
 
 parser = argparse.ArgumentParser(description='performance info converter')
-parser.add_argument('-t', default=None, help=("specify a type of perftool: " + names))
+parser.add_argument('-t', default=None, help=
+  "specify a type of perftool, such as 'sar-w' (see lib/spec.json)")
+parser.add_argument('--hint_file', type=str, default="lib/hint.json")
+parser.add_argument('--spec_file', type=str, default="lib/spec.json")
 parser.add_argument('filepath', nargs='?')
 args = parser.parse_args()
 
+with open(args.spec_file) as f:
+  spec_dict = json.load(f)
+
+with open(args.hint_file) as f:
+  hint_dict  = json.load(f)
+
 key_list = []
 if args.t:
-  key_list.extend(filter(lambda k: re.search(args.t, k), table_dict))
+  key_list.extend(filter(lambda k: re.search(args.t, k), spec_dict))
 
 basename = os.path.basename(args.filepath) if args.filepath else 'sar'
-for l in map(lambda h: h["list"], filter(lambda x: re.search(x["pattern"], basename), hint_dict)):
+for l in map(lambda h: h["list"],
+           filter(lambda x: re.search(x["pattern"], basename), hint_dict)):
   key_list.extend(l)
 
 f = open(args.filepath) if args.filepath else sys.stdin
@@ -34,7 +38,7 @@ try:
   for k in key_list:
     if args.filepath:
       f.seek(0)
-    for a in lib.table.Table(f, **table_dict[k]):
+    for a in lib.table.Table(f, **spec_dict[k]):
       writer.writerow(a)
       sys.stdout.flush()
       out = True

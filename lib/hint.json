@@ -1,0 +1,71 @@
+[
+  { "pattern": "sar",
+    "list": [
+      "sar-u",
+      "sar-B",
+      "sar-b",
+      "sar-d",
+      "sar-H",
+      "sar-I",
+      "sar-mCPU",
+      "sar-nDEV",
+      "sar-nEDEV",
+      "sar-nSOCK",
+      "sar-nIP",
+      "sar-nEIP",
+      "sar-nICMP",
+      "sar-nEICMP",
+      "sar-nTCP",
+      "sar-nETCP",
+      "sar-nUDP",
+      "sar-nEUDP",
+      "sar-q",
+      "sar-R",
+      "sar-r",
+      "sar-S",
+      "sar-v",
+      "sar-W",
+      "sar-w"
+    ]
+  },
+  { "pattern": "^top",
+    "list": [
+      "top"
+    ]
+  },
+  { "pattern": "^ps",
+    "list": [
+      "ps"
+    ]
+  },
+  { "pattern": "iostat",
+    "list": [
+      "iostat"
+    ]
+  },
+  { "pattern": "interrupts",
+    "list": [
+      "interrupts"
+    ]
+  },
+  { "pattern": "numastat",
+    "list": [
+      "numastat"
+    ]
+  },
+  { "pattern": "mpstat",
+    "list": [
+      "sar-u"
+    ]
+  },
+  { "pattern": "pidstat",
+    "list": [
+      "pidstat-d"
+    ]
+  },
+  { "pattern": "slabinfo",
+    "list": [
+      "slabinfo"
+    ]
+  }
+]
