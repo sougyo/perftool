@@ -7,7 +7,7 @@ import re
 
 parser = argparse.ArgumentParser(description='unit converter')
 parser.add_argument('-i', action='store_true', help='KiB, MiB, GiB,...')
-parser.add_argument('-o', type=str, help='output unit')
+parser.add_argument('-d', type=str, help='default unit')
 args = parser.parse_args()
 
 k = 1024 if args.i else 1000
@@ -19,8 +19,8 @@ coef = { 'k': k ** 1,
 
 def conv(val, unit):
   val *= coef[unit.lower()]
-  if args.o:
-    val /= (coef.get(args.o.lower()) or 1)
+  if args.d:
+    val /= (coef.get(args.d.lower()) or 1)
   return val 
 
 unit_pattern = re.compile("^([+-e\d\.]+)([kmgtp])$", re.IGNORECASE)
