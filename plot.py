@@ -16,7 +16,6 @@ parser.add_argument('--max_top_n'  ,type=int, help='show only top n result by ma
 parser.add_argument('--ylabel'     ,type=str, help='ylabel')
 parser.add_argument('--title'      ,type=str, help='graph title')
 parser.add_argument('--stack'      ,action='store_true', help='stacked graph')
-parser.add_argument('--show_title' ,action='store_true', help='show title in each graph')
 parser.add_argument('--width'      ,default=11,   type=int, help='width')
 parser.add_argument('--height'     ,default=6,    type=int, help='height')
 parser.add_argument('--yformatter' ,default="{x:,.0f}", type=str, help='y axis formatter')
@@ -26,7 +25,22 @@ parser.add_argument('--legend_uniq',action='store_true', help='show legend only 
 parser.add_argument('filepaths'    ,nargs='*')
 args = parser.parse_args()
 
-filepaths = args.filepaths or [sys.stdin]
+filepaths = []
+titles    = []
+
+if args.filepaths:
+  for f in args.filepaths:
+    title = ""
+    if f.count(":") > 0:
+      title, path = f.split(":", 1)
+    else:
+      path = f
+
+    filepaths.append(path)
+    titles.append(title)
+else:
+  filepaths = [sys.stdin]
+  titles    = [""]
 
 dfs = [pd.read_csv(f, index_col='time') for f in filepaths]
 dfs = [(df.filter(regex=args.regex) if args.regex else df) for df in dfs]
@@ -52,8 +66,8 @@ for i, (df, ax) in enumerate(zip(dfs, ax_list)):
     plot_option['linewidth'] = 0
   ax.set_xticklabels(df.index)
   ax.yaxis.set_major_formatter(ticker.StrMethodFormatter(args.yformatter))
-  if args.show_title:
-    ax.set_title(filepaths[i])
+  if titles[i]:
+    ax.set_title(titles[i])
   df.plot(**plot_option)
 
   ylims.append(ax.get_ylim())
