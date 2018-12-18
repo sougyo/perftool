@@ -11,8 +11,10 @@ import lib.table
 parser = argparse.ArgumentParser(description='performance info converter')
 parser.add_argument('-t', default=None, help=
   "specify a type of perftool, such as 'sar-w' (see lib/spec.json)")
-parser.add_argument('--hint_file', type=str, default="lib/hint.json")
-parser.add_argument('--spec_file', type=str, default="lib/spec.json")
+parser.add_argument('--hint_file', type=str,
+  default=os.path.join(os.path.dirname(__file__), "lib/hint.json"))
+parser.add_argument('--spec_file', type=str,
+  default=os.path.join(os.path.dirname(__file__), "lib/spec.json"))
 parser.add_argument('filepath', nargs='?')
 args = parser.parse_args()
 
