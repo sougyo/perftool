@@ -39,7 +39,7 @@ class Table:
       line = self.fd.readline()
 
       if not line:
-        raise StopIteration
+        return
 
       line = line.strip()
 
