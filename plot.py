@@ -25,6 +25,10 @@ parser.add_argument('--legend_uniq',action='store_true', help='show legend only 
 parser.add_argument('filepaths'    ,nargs='*')
 args = parser.parse_args()
 
+if args.w:
+  import matplotlib as mpl
+  mpl.use('Agg')
+
 filepaths = []
 titles    = []
 
