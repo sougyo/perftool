@@ -2,8 +2,6 @@
 
 import sys
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import argparse
 
 parser = argparse.ArgumentParser(description='performance info converter')
@@ -28,6 +26,9 @@ args = parser.parse_args()
 if args.w:
   import matplotlib as mpl
   mpl.use('Agg')
+
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 filepaths = []
 titles    = []
