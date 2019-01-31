@@ -33,7 +33,8 @@ for l in map(lambda h: h["list"],
            filter(lambda x: re.search(x["pattern"], basename), hint_dict)):
   key_list.extend(l)
 
-f = open(args.filepath) if args.filepath else sys.stdin
+from io import open
+f = open(args.filepath, 'r', encoding='utf-8') if args.filepath else sys.stdin
 writer = csv.writer(sys.stdout)
 out = False
 try:

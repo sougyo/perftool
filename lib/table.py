@@ -17,7 +17,7 @@ class Table:
     self.columns       = None
     self.time_list     = collections.OrderedDict()
     self.gen           = self.generator()
-    self.head_time_regexp = re.compile(r"^(\d\d)(:|時)(\d\d)(:|分)(\d\d)(秒)?\s+(.*)$")
+    self.head_time_regexp = re.compile(u"^(\d\d)(:|時)(\d\d)(:|分)(\d\d)(秒)?\s+(.*)$")
     self.replace_old = options.get("replace_old")
     self.replace_new  = options.get("replace_new")
 
