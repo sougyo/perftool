@@ -51,7 +51,9 @@ def make_df(tagged_path, index_col):
   else:
     path = tagged_path
 
-  df = pd.read_csv(path, index_col=index_col)
+  df = pd.read_csv(path)
+  if index_col in df.columns:
+    df = df.set_index(index_col)
   if prefix_tag or postfix_tag:
     df.columns = [prefix_tag + column + postfix_tag for column in df.columns]
 

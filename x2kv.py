@@ -15,6 +15,7 @@ parser.add_argument('--hint_file', type=str,
   default=os.path.join(os.path.dirname(__file__), "lib/hint.json"))
 parser.add_argument('--spec_file', type=str,
   default=os.path.join(os.path.dirname(__file__), "lib/spec.json"))
+parser.add_argument('--strict', action='store_true', help='strict type')
 parser.add_argument('filepath', nargs='?')
 args = parser.parse_args()
 
@@ -25,13 +26,16 @@ with open(args.hint_file) as f:
   hint_dict  = json.load(f)
 
 key_list = []
-if args.t:
-  key_list.extend(filter(lambda k: re.search(args.t, k), spec_dict))
+if args.strict and args.t:
+  key_list.append(args.t)
+else:
+  if args.t:
+    key_list.extend(filter(lambda k: re.search(args.t, k), spec_dict))
 
-basename = os.path.basename(args.filepath) if args.filepath else 'sar'
-for l in map(lambda h: h["list"],
-           filter(lambda x: re.search(x["pattern"], basename), hint_dict)):
-  key_list.extend(l)
+  basename = os.path.basename(args.filepath) if args.filepath else 'sar'
+  for l in map(lambda h: h["list"],
+             filter(lambda x: re.search(x["pattern"], basename), hint_dict)):
+    key_list.extend(l)
 
 from io import open
 f = open(args.filepath, 'r', encoding='utf-8') if args.filepath else sys.stdin

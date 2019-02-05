@@ -15,7 +15,12 @@ time_list = collections.OrderedDict()
 prev_time = None
 cnt = 0
 
-for (time, k1, k2, val) in csv.reader(sys.stdin):
+for a in csv.reader(sys.stdin):
+  if len(a) == 0:
+    continue
+
+  time, k1, k2, val = a
+
   if time != prev_time:
     cnt += 1
 
