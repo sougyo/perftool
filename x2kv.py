@@ -16,6 +16,7 @@ parser.add_argument('--hint_file', type=str,
 parser.add_argument('--spec_file', type=str,
   default=os.path.join(os.path.dirname(__file__), "lib/spec.json"))
 parser.add_argument('--strict', action='store_true', help='strict type')
+parser.add_argument('--list', action='store_true', help='list spec keys')
 parser.add_argument('filepath', nargs='?')
 args = parser.parse_args()
 
@@ -24,6 +25,11 @@ with open(args.spec_file) as f:
 
 with open(args.hint_file) as f:
   hint_dict  = json.load(f)
+
+if args.list:
+  for k in sorted(spec_dict):
+    print(k)
+  sys.exit(0)
 
 key_list = []
 if args.strict and args.t:
