@@ -15,12 +15,7 @@ time_list = collections.OrderedDict()
 prev_time = None
 cnt = 0
 
-for a in csv.reader(sys.stdin):
-  if len(a) == 0:
-    continue
-
-  time, k1, k2, val = a
-
+for (time, k1, k2, val) in filter(lambda x: x, csv.reader(sys.stdin)):
   if time != prev_time:
     cnt += 1
 
@@ -32,7 +27,6 @@ for a in csv.reader(sys.stdin):
 
   if not (cnt_time in d):
     d[cnt_time] = {}
-
   d[cnt_time][key] = val
 
   time_list[cnt_time] = True
