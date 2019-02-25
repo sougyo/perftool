@@ -76,7 +76,7 @@ if args.label_with_index:
   for i, df in enumerate(dfs):
     df.columns = map(lambda x: str(i) + "_" + x,df.columns)
 
-df = pd.concat(dfs, axis=1)
+df = pd.concat(dfs, axis=1, sort=False)
 df.index.name = args.index_name or 'time'
 
 cond = [True] * len(df.index)
@@ -153,7 +153,7 @@ if args.std:
   append_stat("std", df.std())
 
 if stats["series"]:
-  print(pd.concat(stats["series"], keys=stats["keys"], axis=1).to_csv(**csv_opt))
+  print(pd.concat(stats["series"], keys=stats["keys"], axis=1, sort=False).to_csv(**csv_opt))
 else:
   print(df.to_csv(**csv_opt))
 
