@@ -1,0 +1,81 @@
+data:
+- out: "all_cpu.csv"
+  metrics:
+  - kernel.all.cpu.sys
+  - kernel.all.cpu.vuser
+  - kernel.all.cpu.vnice
+  - kernel.all.cpu.guest
+  - kernel.all.cpu.guest_nice
+  - kernel.all.cpu.irq.hard
+  - kernel.all.cpu.irq.soft
+  - kernel.all.cpu.wait.total
+  - kernel.all.cpu.idle
+  - kernel.all.cpu.steal
+  - kernel.all.cpu.idle
+- out: "percpu.csv"
+  metrics:
+  - kernel.percpu.cpu.sys
+  - kernel.percpu.cpu.vuser
+  - kernel.percpu.cpu.vnice
+  - kernel.percpu.cpu.guest
+  - kernel.percpu.cpu.guest_nice
+  - kernel.percpu.cpu.irq.hard
+  - kernel.percpu.cpu.irq.soft
+  - kernel.percpu.cpu.wait.total
+  - kernel.percpu.cpu.idle
+  - kernel.percpu.cpu.steal
+- out: "mem_util.csv"
+  metrics:
+  - mem.util
+- out: "vmstat.csv"
+  metrics:
+  - mem.vmstat
+- out: "zoninfo.csv"
+  metrics:
+  - mem.zoneinfo
+- out: "ksm.csv"
+  metrics:
+  - mem.ksm
+- out: "numa.csv"
+  metrics:
+  - mem.numa
+- out: "network_interface.csv"
+  metrics:
+  - network.interface
+- out: "ip.csv"
+  metrics:
+  - network.ip
+  - network.ip6
+- out: "icmp.csv"
+  metrics:
+  - network.icmp
+  - network.icmp6
+- out: "tcp.csv"
+  metrics:
+  - network.tcp
+- out: "udp.csv"
+  metrics:
+  - network.udp
+  - network.udp6
+- out: "softnet.csv"
+  metrics:
+  - network.softnet
+- out: "interrupts.csv"
+  metrics:
+  - kernel.percpu.interrupts
+- out: "disk.csv"
+  metrics:
+  - disk.partitions
+- out: "proc.csv"
+  metrics:
+  - proc.psinfo.stime
+  - proc.psinfo.utime
+  - proc.psinfo.rss
+  - proc.psinfo.maj_flt
+  - proc.io.read_bytes
+  - proc.io.write_bytes
+- out: "os.csv"
+  metrics:
+  - proc.nprocs
+  - proc.runq.runnable
+  - proc.runq.blocked
