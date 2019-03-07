@@ -23,6 +23,7 @@ parser.add_argument('--median'          , action='store_true', help='median')
 parser.add_argument('--sum'             , action='store_true', help='sum')
 parser.add_argument('--std'             , action='store_true', help='std')
 parser.add_argument('--transpose'       , action='store_true', help='transpose')
+parser.add_argument('--transpose_out'   , action='store_true', help='transpose')
 parser.add_argument('--normalize'       , action='store_true', help='normalize')
 parser.add_argument('--standardize'     , action='store_true', help='standardize')
 parser.add_argument('--columns'         , action='store_true', help='columns')
@@ -38,6 +39,11 @@ args = parser.parse_args()
 csv_opt = { 'float_format': args.csv_float_format or '%.1f' }
 
 filepaths = args.filepaths or [sys.stdin]
+
+def show_csv(df):
+  if args.transpose_out:
+    df = df.transpose()
+  print(df.to_csv(**csv_opt))
 
 def make_df(tagged_path, index_col):
   prefix_tag = ""
@@ -76,7 +82,7 @@ if args.label_with_index:
   for i, df in enumerate(dfs):
     df.columns = map(lambda x: str(i) + "_" + x,df.columns)
 
-df = pd.concat(dfs, axis=1, sort=False)
+df = pd.concat(dfs, axis=1)
 df.index.name = args.index_name or 'time'
 
 cond = [True] * len(df.index)
@@ -123,7 +129,7 @@ if args.columns:
   sys.exit(0)
 
 if args.describe:
-  print(df.describe().to_csv(**csv_opt))
+  show_csv(df.describe())
   sys.exit(0)
 
 if args.normalize:
@@ -153,7 +159,7 @@ if args.std:
   append_stat("std", df.std())
 
 if stats["series"]:
-  print(pd.concat(stats["series"], keys=stats["keys"], axis=1, sort=False).to_csv(**csv_opt))
+  show_csv(pd.concat(stats["series"], keys=stats["keys"], axis=1))
 else:
-  print(df.to_csv(**csv_opt))
+  show_csv(df)
 
