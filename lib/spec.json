@@ -3,11 +3,14 @@
     "column_pattern": "pgpg"
   },
   "sar-b": {
-    "column_pattern": "tps"
+    "column_pattern": "bread"
   },
   "sar-d": {
     "column_pattern": "svctm",
     "subkey_column": "DEV"
+  },
+  "sar-F": {
+    "column_pattern": "MBfsfree"
   },
   "sar-H": {
     "column_pattern": "kbhug"
@@ -29,31 +32,28 @@
     "subkey_column": "IFACE"
   },
   "sar-nSOCK": {
-    "column_pattern": "sck"
+    "column_pattern": "totsck"
   },
   "sar-nIP": {
-    "column_pattern": "irec"
+    "column_pattern": "irec/s"
   },
   "sar-nEIP": {
     "column_pattern": "ihdrerr"
   },
   "sar-nICMP": {
-    "column_pattern": "imsg"
+    "column_pattern": "imsg/s"
   },
   "sar-nEICMP": {
-    "column_pattern": "ierr"
+    "column_pattern": "ierr/s"
   },
   "sar-nTCP": {
-    "column_pattern": "passive"
+    "column_pattern": "passive/s"
   },
   "sar-nETCP": {
     "column_pattern": "atmptf"
   },
   "sar-nUDP": {
-    "column_pattern": "idgm"
-  },
-  "sar-nEUDP": {
-    "column_pattern": "atmptf"
+    "column_pattern": "idgm/s"
   },
   "sar-q": {
     "column_pattern": "runq"
@@ -81,7 +81,10 @@
   "sar-w": {
     "column_pattern": "cswch"
   },
-  "iostat": {
+  "sar-y": {
+    "column_pattern": "rcvin/s"
+  },
+  "iostat-x": {
     "column_pattern": "rrqm",
     "subkey_column": "Device:",
     "time_regexp": "\\d\\d/\\d\\d/\\d\\d (\\d\\d:\\d\\d:\\d\\d)"

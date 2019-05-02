@@ -5,6 +5,7 @@
       "sar-B",
       "sar-b",
       "sar-d",
+      "sar-F",
       "sar-H",
       "sar-I",
       "sar-mCPU",
@@ -18,14 +19,14 @@
       "sar-nTCP",
       "sar-nETCP",
       "sar-nUDP",
-      "sar-nEUDP",
       "sar-q",
       "sar-R",
       "sar-r",
       "sar-S",
       "sar-v",
       "sar-W",
-      "sar-w"
+      "sar-w",
+      "sar-y"
     ]
   },
   { "pattern": "^top",
@@ -40,7 +41,7 @@
   },
   { "pattern": "iostat",
     "list": [
-      "iostat"
+      "iostat-x"
     ]
   },
   { "pattern": "interrupts",
